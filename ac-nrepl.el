@@ -55,10 +55,10 @@
     (car (read-from-string (plist-get (nrepl-send-string-sync form (nrepl-current-ns)) :value)))))
 
 (defun ac-nrepl-documentation (symbol)
-  "Returns documentation for the given symbol, if available."
+  "Return documentation for the given SYMBOL, if available."
   (substring-no-properties
    (replace-regexp-in-string
-    "^  " ""
+    "^\\(  \\|-------------------------\n\\)" ""
     (plist-get (nrepl-send-string-sync
                 (format "(clojure.repl/doc %s)" symbol)
                 (nrepl-current-ns))
