@@ -58,11 +58,13 @@
   "Return documentation for the given SYMBOL, if available."
   (substring-no-properties
    (replace-regexp-in-string
-    "^\\(  \\|-------------------------\r?\n\\)" ""
-    (plist-get (nrepl-send-string-sync
-                (format "(clojure.repl/doc %s)" symbol)
-                (nrepl-current-ns))
-               :stdout))))
+    "\r" ""
+    (replace-regexp-in-string
+     "^\\(  \\|-------------------------\r?\n\\)" ""
+     (plist-get (nrepl-send-string-sync
+                 (format "(clojure.repl/doc %s)" symbol)
+                 (nrepl-current-ns))
+                :stdout)))))
 
 ;;;###autoload
 (defface ac-nrepl-candidate-face
