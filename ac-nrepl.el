@@ -1,8 +1,8 @@
 ;;; ac-nrepl.el --- An auto-complete source for Clojure using nrepl completions
 
-;; Copyright (C) 2012  Steve <steve@sanityinc.com>
+;; Copyright (C) 2012  Steve Purcell <steve@sanityinc.com>
 
-;; Author: Steve <steve@sanityinc.com>
+;; Author: Steve Purcell <steve@sanityinc.com>
 ;; URL: https://github.com/purcell/ac-nrepl
 ;; Keywords: languages, clojure, nrepl
 ;; Version: 0.1
