@@ -47,7 +47,9 @@
 
 (defun ac-nrepl-available-p ()
   "Return t if nrepl is available for completion, otherwise nil."
-  (not (null (nrepl-current-session))))
+  (condition-case nil
+      (not (null (nrepl-current-session)))
+    (error nil)))
 
 ;;; TODO: upstream should handle error when current NS is not compiled
 (defun ac-nrepl-candidates ()
