@@ -53,8 +53,12 @@
 
 ;;; TODO: upstream should handle error when current NS is not compiled
 (defun ac-nrepl-candidates ()
-  (let ((form (format "(complete.core/completions \"%s\" *ns*)" ac-prefix)))
-    (car (read-from-string (plist-get (nrepl-send-string-sync form (nrepl-current-ns)) :value)))))
+  "Return completion candidates beginning with the string in variable `ac-prefix'."
+  (if (fboundp 'nrepl-completion-complete-core-fn)
+      (nrepl-completion-complete-core-fn ac-prefix)
+    ;; TODO: remove the following once nrepl-completion-complete-core-fn is in stable nrepl release
+    (let ((form (format "(complete.core/completions \"%s\" *ns*)" ac-prefix)))
+      (car (read-from-string (plist-get (nrepl-send-string-sync form (nrepl-current-ns)) :value))))))
 
 (defun ac-nrepl-documentation (symbol)
   "Return documentation for the given SYMBOL, if available."
