@@ -72,6 +72,12 @@
                  (nrepl-current-ns))
                 :stdout)))))
 
+(defun ac-nrepl-symbol-start-pos ()
+  "Find the starting position of the symbol at point, unless inside a string."
+  (let ((sap (symbol-at-point)))
+    (when (and sap (not (in-string-p)))
+      (car (bounds-of-thing-at-point 'symbol)))))
+
 ;;;###autoload
 (defface ac-nrepl-candidate-face
   '((t (:inherit ac-candidate-face)))
@@ -90,6 +96,7 @@
     (available . ac-nrepl-available-p)
     (candidate-face . ac-nrepl-candidate-face)
     (selection-face . ac-nrepl-selection-face)
+    (prefix . ac-nrepl-symbol-start-pos)
     (symbol . "n")
     (document . ac-nrepl-documentation))
   "Auto-complete source for nrepl completion.")
