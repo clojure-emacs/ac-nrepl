@@ -57,8 +57,10 @@
   (if (fboundp 'nrepl-completion-complete-core-fn)
       (nrepl-completion-complete-core-fn ac-prefix)
     ;; TODO: remove the following once nrepl-completion-complete-core-fn is in stable nrepl release
-    (let ((form (format "(complete.core/completions \"%s\" *ns*)" ac-prefix)))
-      (car (read-from-string (plist-get (nrepl-send-string-sync form (nrepl-current-ns)) :value))))))
+    (let* ((form (format "(complete.core/completions \"%s\" *ns*)" ac-prefix))
+           (response (plist-get (nrepl-send-string-sync form (nrepl-current-ns)) :value)))
+      (when response
+        (car (read-from-string response))))))
 
 (defun ac-nrepl-documentation (symbol)
   "Return documentation for the given SYMBOL, if available."
