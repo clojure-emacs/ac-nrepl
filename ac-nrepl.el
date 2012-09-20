@@ -79,7 +79,7 @@
     (replace-regexp-in-string
      "^\\(  \\|-------------------------\r?\n\\)" ""
      (plist-get (nrepl-send-string-sync
-                 (format "(clojure.repl/doc %s)" symbol)
+                 (format "(try (eval '(clojure.repl/doc %s)) (catch Exception e (println \"Error getting docs. Namespace?\")))" symbol)
                  (nrepl-current-ns))
                 :stdout)))))
 
