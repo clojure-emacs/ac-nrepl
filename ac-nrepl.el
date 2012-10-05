@@ -161,6 +161,7 @@
     (document . ac-nrepl-documentation))
   "Auto-complete source for nrepl ns completion.")
 
+;;;###autoload
 (defvar ac-source-nrepl-vars
   '((candidates . ac-nrepl-candidates-vars)
     (available . ac-nrepl-available-p)
@@ -171,6 +172,7 @@
     (document . ac-nrepl-documentation))
   "Auto-complete source for nrepl var completion.")
 
+;;;###autoload
 (defvar ac-source-nrepl-ns-classes
   '((candidates . ac-nrepl-candidates-ns-classes)
     (available . ac-nrepl-available-p)
@@ -181,6 +183,7 @@
     (document . ac-nrepl-documentation))
   "Auto-complete source for nrepl ns-specific class completion.")
 
+;;;###autoload
 (defvar ac-source-nrepl-all-classes
   '((candidates . ac-nrepl-candidates-all-classes)
     (available . ac-nrepl-available-p)
@@ -196,6 +199,7 @@
     (search-backward " [")
     (delete-region beg (point))))
 
+;;;###autoload
 (defvar ac-source-nrepl-java-methods
   '((candidates . ac-nrepl-candidates-java-methods)
     (available . ac-nrepl-available-p)
@@ -207,6 +211,7 @@
     (action . ac-nrepl-delete-java-class-hint))
   "Auto-complete source for nrepl java method completion.")
 
+;;;###autoload
 (defvar ac-source-nrepl-static-methods
   '((candidates . ac-nrepl-candidates-static-methods)
     (available . ac-nrepl-available-p)
