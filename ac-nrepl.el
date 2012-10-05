@@ -93,12 +93,14 @@
   '())
 
 (defun ac-nrepl-cache-all-classes ()
+  (message "Listing all matching JVM classes...")
   (if (eq '() ac-nrepl-all-classes-cache)
-      (setq ac-nrepl-all-classes-cache (ac-nrepl-fetch-all-classes))))
+      (setq ac-nrepl-all-classes-cache (ac-nrepl-fetch-all-classes))
+    ac-nrepl-all-classes-cache))
 
 (defun ac-nrepl-candidates-all-classes ()
   (if (string-match-p (regexp-quote ".") ac-prefix)
-      ac-nrepl-all-classes-cache
+      (ac-nrepl-cache-all-classes)
     '()))
 
 (defun ac-nrepl-candidates-java-methods ()
@@ -180,15 +182,13 @@
   "Auto-complete source for nrepl ns-specific class completion.")
 
 (defvar ac-source-nrepl-all-classes
-  '((init . ac-nrepl-cache-all-classes)
-    (candidates . ac-nrepl-candidates-all-classes)
+  '((candidates . ac-nrepl-candidates-all-classes)
     (available . ac-nrepl-available-p)
     (candidate-face . ac-nrepl-candidate-face)
     (selection-face . ac-nrepl-selection-face)
     (prefix . ac-nrepl-symbol-start-pos)
     (symbol . "c")
-    (document . ac-nrepl-documentation)
-    (cache))
+    (document . ac-nrepl-documentation))
   "Auto-complete source for nrepl all class completion.")
 
 (defun ac-nrepl-delete-java-class-hint ()
