@@ -99,6 +99,14 @@
 (defvar ac-nrepl-all-classes-cache nil
   "Cached list of all classes loaded in the JVM backend.")
 
+;;;###autoload
+(defun ac-nrepl-clear-class-cache ()
+  "Clear the class cache to prevent stale results."
+  (setq ac-nrepl-all-classes-cache nil))
+
+;;;###autoload
+(add-hook 'nrepl-connected-hook 'ac-nrepl-clear-class-cache)
+
 (defun ac-nrepl-cache-all-classes ()
   "Return a cached list of all class names loaded in the JVM backend."
   (message "Listing all matching JVM classes...")
