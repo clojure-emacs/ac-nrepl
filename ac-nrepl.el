@@ -171,47 +171,41 @@
   :group 'auto-complete)
 
 ;;;###autoload
+(defun ac-source--make-source (options)
+  "Adorn OPTIONS with defaults common to the various completion sources."
+  (append options
+          '((available . ac-nrepl-available-p)
+            (candidate-face . ac-nrepl-candidate-face)
+            (selection-face . ac-nrepl-selection-face)
+            (prefix . ac-nrepl-symbol-start-pos)
+            (document . ac-nrepl-documentation))))
+
+;;;###autoload
 (defvar ac-source-nrepl-ns
-  '((candidates . ac-nrepl-candidates-ns)
-    (available . ac-nrepl-available-p)
-    (candidate-face . ac-nrepl-candidate-face)
-    (selection-face . ac-nrepl-selection-face)
-    (prefix . ac-nrepl-symbol-start-pos)
-    (symbol . "n")
-    (document . ac-nrepl-documentation))
+  (ac-source--make-source
+   '((candidates . ac-nrepl-candidates-ns)
+     (symbol . "n")))
   "Auto-complete source for nrepl ns completion.")
 
 ;;;###autoload
 (defvar ac-source-nrepl-vars
-  '((candidates . ac-nrepl-candidates-vars)
-    (available . ac-nrepl-available-p)
-    (candidate-face . ac-nrepl-candidate-face)
-    (selection-face . ac-nrepl-selection-face)
-    (prefix . ac-nrepl-symbol-start-pos)
-    (symbol . "v")
-    (document . ac-nrepl-documentation))
+  (ac-source--make-source
+   '((candidates . ac-nrepl-candidates-vars)
+     (symbol . "v")))
   "Auto-complete source for nrepl var completion.")
 
 ;;;###autoload
 (defvar ac-source-nrepl-ns-classes
-  '((candidates . ac-nrepl-candidates-ns-classes)
-    (available . ac-nrepl-available-p)
-    (candidate-face . ac-nrepl-candidate-face)
-    (selection-face . ac-nrepl-selection-face)
-    (prefix . ac-nrepl-symbol-start-pos)
-    (symbol . "c")
-    (document . ac-nrepl-documentation))
+  (ac-source--make-source
+   '((candidates . ac-nrepl-candidates-ns-classes)
+     (symbol . "c")))
   "Auto-complete source for nrepl ns-specific class completion.")
 
 ;;;###autoload
 (defvar ac-source-nrepl-all-classes
-  '((candidates . ac-nrepl-candidates-all-classes)
-    (available . ac-nrepl-available-p)
-    (candidate-face . ac-nrepl-candidate-face)
-    (selection-face . ac-nrepl-selection-face)
-    (prefix . ac-nrepl-symbol-start-pos)
-    (symbol . "c")
-    (document . ac-nrepl-documentation))
+  (ac-source--make-source
+   '((candidates . ac-nrepl-candidates-all-classes)
+     (symbol . "c")))
   "Auto-complete source for nrepl all class completion.")
 
 (defun ac-nrepl-delete-java-class-hint ()
@@ -222,25 +216,17 @@
 
 ;;;###autoload
 (defvar ac-source-nrepl-java-methods
-  '((candidates . ac-nrepl-candidates-java-methods)
-    (available . ac-nrepl-available-p)
-    (candidate-face . ac-nrepl-candidate-face)
-    (selection-face . ac-nrepl-selection-face)
-    (prefix . ac-nrepl-symbol-start-pos)
-    (symbol . "m")
-    (document . ac-nrepl-documentation)
-    (action . ac-nrepl-delete-java-class-hint))
+  (ac-source--make-source
+   '((candidates . ac-nrepl-candidates-java-methods)
+     (symbol . "m")
+     (action . ac-nrepl-delete-java-class-hint)))
   "Auto-complete source for nrepl java method completion.")
 
 ;;;###autoload
 (defvar ac-source-nrepl-static-methods
-  '((candidates . ac-nrepl-candidates-static-methods)
-    (available . ac-nrepl-available-p)
-    (candidate-face . ac-nrepl-candidate-face)
-    (selection-face . ac-nrepl-selection-face)
-    (prefix . ac-nrepl-symbol-start-pos)
-    (symbol . "s")
-    (document . ac-nrepl-documentation))
+  (ac-source--make-source
+   '((candidates . ac-nrepl-candidates-static-methods)
+     (symbol . "s")))
   "Auto-complete source for nrepl java static method completion.")
 
 
