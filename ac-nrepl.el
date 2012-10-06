@@ -61,8 +61,8 @@
     (error nil)))
 
 (defun ac-nrepl-candidates* (clj)
-  "Return filtered completion candidates returned by evaluating CLJ."
-  (let* ((response (plist-get (nrepl-send-string-sync clj nrepl-buffer-ns) :value)))
+  "Return completion candidates produced by evaluating CLJ."
+  (let ((response (plist-get (nrepl-send-string-sync clj nrepl-buffer-ns) :value)))
     (when response
       (car (read-from-string response)))))
 
@@ -93,8 +93,8 @@
 (defun ac-nrepl-fetch-all-classes ()
   "Return all class candidates."
   (ac-nrepl-candidates*
-   (ac-nrepl-unfiltered-clj  "(concat @complete.core/nested-classes
-                                      @complete.core/top-level-classes)")))
+   (ac-nrepl-unfiltered-clj "(concat @complete.core/nested-classes
+                                     @complete.core/top-level-classes)")))
 
 (defvar ac-nrepl-all-classes-cache nil
   "Cached list of all classes loaded in the JVM backend.")
