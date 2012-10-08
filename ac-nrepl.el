@@ -171,41 +171,44 @@
   :group 'auto-complete)
 
 ;;;###autoload
-(defun ac-source--make-source (options)
-  "Adorn OPTIONS with defaults common to the various completion sources."
-  (append options
-          '((available . ac-nrepl-available-p)
-            (candidate-face . ac-nrepl-candidate-face)
-            (selection-face . ac-nrepl-selection-face)
-            (prefix . ac-nrepl-symbol-start-pos)
-            (document . ac-nrepl-documentation))))
+(defconst ac-nrepl-source-defaults
+  '((available . ac-nrepl-available-p)
+    (candidate-face . ac-nrepl-candidate-face)
+    (selection-face . ac-nrepl-selection-face)
+    (prefix . ac-nrepl-symbol-start-pos)
+    (document . ac-nrepl-documentation))
+  "Defaults common to the various completion sources.")
 
 ;;;###autoload
 (defvar ac-source-nrepl-ns
-  (ac-source--make-source
+  (append
    '((candidates . ac-nrepl-candidates-ns)
-     (symbol . "n")))
+     (symbol . "n"))
+   ac-nrepl-source-defaults)
   "Auto-complete source for nrepl ns completion.")
 
 ;;;###autoload
 (defvar ac-source-nrepl-vars
-  (ac-source--make-source
+  (append
    '((candidates . ac-nrepl-candidates-vars)
-     (symbol . "v")))
+     (symbol . "v"))
+   ac-nrepl-source-defaults)
   "Auto-complete source for nrepl var completion.")
 
 ;;;###autoload
 (defvar ac-source-nrepl-ns-classes
-  (ac-source--make-source
+  (append
    '((candidates . ac-nrepl-candidates-ns-classes)
-     (symbol . "c")))
+     (symbol . "c"))
+   ac-nrepl-source-defaults)
   "Auto-complete source for nrepl ns-specific class completion.")
 
 ;;;###autoload
 (defvar ac-source-nrepl-all-classes
-  (ac-source--make-source
+  (append
    '((candidates . ac-nrepl-candidates-all-classes)
-     (symbol . "c")))
+     (symbol . "c"))
+   ac-nrepl-source-defaults)
   "Auto-complete source for nrepl all class completion.")
 
 (defun ac-nrepl-delete-java-class-hint ()
@@ -216,17 +219,19 @@
 
 ;;;###autoload
 (defvar ac-source-nrepl-java-methods
-  (ac-source--make-source
+  (append
    '((candidates . ac-nrepl-candidates-java-methods)
      (symbol . "m")
-     (action . ac-nrepl-delete-java-class-hint)))
+     (action . ac-nrepl-delete-java-class-hint))
+   ac-nrepl-source-defaults)
   "Auto-complete source for nrepl java method completion.")
 
 ;;;###autoload
 (defvar ac-source-nrepl-static-methods
-  (ac-source--make-source
+  (append
    '((candidates . ac-nrepl-candidates-static-methods)
-     (symbol . "s")))
+     (symbol . "s"))
+   ac-nrepl-source-defaults)
   "Auto-complete source for nrepl java static method completion.")
 
 
