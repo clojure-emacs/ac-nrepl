@@ -62,7 +62,7 @@
 
 (defun ac-nrepl-candidates* (clj)
   "Return completion candidates produced by evaluating CLJ."
-  (let ((response (plist-get (nrepl-send-string-sync clj nrepl-buffer-ns) :value)))
+  (let ((response (plist-get (nrepl-send-string-sync clj (nrepl-current-ns)) :value)))
     (when response
       (car (read-from-string response)))))
 
@@ -83,7 +83,19 @@
 (defun ac-nrepl-candidates-vars ()
   "Return var candidates."
   (ac-nrepl-candidates*
-   (ac-nrepl-filtered-clj "(complete.core/ns-vars *ns*)")))
+   (ac-nrepl-filtered-clj "(let [prefix \"%s\"]
+    (if-not (.contains prefix \"/\")
+      (complete.core/ns-vars *ns*)
+      (let [ns-alias (symbol (first (.split prefix \"/\")))
+            core     (find-ns 'clojure.core)]
+        (if-let [ns (or (get (ns-aliases *ns*) ns-alias)
+                        (find-ns ns-alias))]
+          (let [vars (complete.core/ns-vars ns)
+                vars (if (= core ns)
+                       vars
+                       (remove (into #{} (complete.core/ns-vars core)) vars))]
+            (map (fn [x] (str ns-alias \"/\" x)) vars))
+           '()))))")))
 
 (defun ac-nrepl-candidates-ns-classes ()
   "Return namespaced class candidates."
@@ -109,14 +121,15 @@
 
 (defun ac-nrepl-cache-all-classes ()
   "Return a cached list of all class names loaded in the JVM backend."
-  (message "Listing all matching JVM classes...")
-  (unless ac-nrepl-all-classes-cache
-    (setq ac-nrepl-all-classes-cache (ac-nrepl-fetch-all-classes)))
-  ac-nrepl-all-classes-cache)
+  (if (eq '() ac-nrepl-all-classes-cache)
+    (progn
+      (message "Caching matching JVM classes...")
+      (setq ac-nrepl-all-classes-cache (ac-nrepl-fetch-all-classes)) )
+    ac-nrepl-all-classes-cache))
 
 (defun ac-nrepl-candidates-all-classes ()
   "Return java method candidates."
-  (when (string-match-p (regexp-quote ".") ac-prefix)
+  (when (string-match-p "^[a-zA-Z]+[a-zA-Z0-9$_]*\\.[a-zA-Z0-9$_.]*$" ac-prefix)
     (ac-nrepl-cache-all-classes)))
 
 (defun ac-nrepl-candidates-java-methods ()
@@ -133,7 +146,7 @@
   (ac-nrepl-candidates*
    (ac-nrepl-filtered-clj
     "(let [prefix \"%s\"]
-       (if-not (.contains prefix \"a\")
+       (if-not (.contains prefix \"/\")
          '()
           (let [scope (symbol (first (.split prefix \"/\")))]
             (map (fn [memb] (str scope \"/\" memb))
@@ -149,7 +162,7 @@
      "^\\(  \\|-------------------------\r?\n\\)" ""
      (plist-get (nrepl-send-string-sync
                  (format "(try (eval '(clojure.repl/doc %s)) (catch Exception e (println \"\")))" symbol)
-                 nrepl-buffer-ns)
+                 (nrepl-current-ns))
                 :stdout)))))
 
 (defun ac-nrepl-symbol-start-pos ()
