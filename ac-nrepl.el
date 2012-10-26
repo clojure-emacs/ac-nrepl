@@ -152,7 +152,8 @@
          '()
           (let [scope (symbol (first (.split prefix \"/\")))]
             (map (fn [memb] (str scope \"/\" memb))
-                 (when-let [class (complete.core/resolve-class scope)]
+                 (when-let [class (try (complete.core/resolve-class scope)
+                                   (catch java.lang.ClassNotFoundException e nil))]
                    (complete.core/static-members class))))))  ")))
 
 (defun ac-nrepl-documentation (symbol)
