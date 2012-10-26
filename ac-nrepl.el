@@ -1,4 +1,4 @@
-;;; ac-nrepl.el --- An auto-complete source for Clojure using nrepl completions
+;;; ac-nrepl.el --- auto-complete sources for Clojure using nrepl completions
 
 ;; Copyright (C) 2012  Steve Purcell <steve@sanityinc.com>
 
@@ -6,7 +6,7 @@
 ;;         Sam Aaron <samaaron@gmail.com>
 ;; URL: https://github.com/purcell/ac-nrepl
 ;; Keywords: languages, clojure, nrepl
-;; Version: 0.1
+;; Version: DEV
 ;; Package-Requires: ((nrepl "0.1") (auto-complete "1.4"))
 
 ;; This program is free software; you can redistribute it and/or
@@ -24,7 +24,8 @@
 
 ;;; Commentary:
 
-;; Based ac-slime
+;; Provides a number of auto-complete sources for Clojure projects
+;; using nrepl.
 
 ;;; Installation:
 
