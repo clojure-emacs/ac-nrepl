@@ -55,6 +55,7 @@
 
 (require 'nrepl)
 (require 'auto-complete)
+(require 'cust-print)
 
 (defun ac-nrepl-available-p ()
   "Return t if nrepl is available for completion, otherwise nil."
@@ -62,53 +63,73 @@
       (not (null (nrepl-current-session)))
     (error nil)))
 
+(defun ac-nrepl--print-clojure-symbol (sym)
+  (cust-print-original-princ (symbol-name sym)))
+
+(defun ac-nrepl--print-clojure (object)
+  (with-output-to-string
+    (unwind-protect
+        (progn
+          (add-custom-printer 'symbolp 'ac-nrepl--print-clojure-symbol)
+          (with-custom-print
+           (custom-prin1 object)))
+      (delete-custom-printer 'symbolp))))
+
+(defun ac-nrepl-send-sexp-sync (clj)
+  "Send clojure sexp CLJ as a string to the nrepl backend."
+  (message "Sending: %s" (ac-nrepl--print-clojure clj))
+  (nrepl-send-string-sync (ac-nrepl--print-clojure clj) (nrepl-current-ns)))
+
 (defun ac-nrepl-candidates* (clj)
   "Return completion candidates produced by evaluating CLJ."
-  (let ((response (plist-get (nrepl-send-string-sync (concat "(require 'complete.core) " clj) (nrepl-current-ns)) :value)))
+  (let ((response (plist-get (ac-nrepl-send-sexp-sync
+                              `(do (require 'complete.core) ,@clj))
+                             :value)))
     (when response
       (car (read-from-string response)))))
 
 (defun ac-nrepl-unfiltered-clj (clj)
-  "Return a version of CLJ with the completion prefix inserted."
-  (format clj ac-prefix))
+  "Return a version of CLJ with prefix bound to ac-prefix."
+  `(let [prefix ,ac-prefix] ,clj))
 
 (defun ac-nrepl-filtered-clj (clj)
   "Build an expression which extracts the prefixed values from CLJ."
-  (concat "(filter #(.startsWith % \"" ac-prefix "\")"
-          (ac-nrepl-unfiltered-clj clj) ")"))
+  `(filter (fn [sym] (.startsWith sym ,ac-prefix))
+           ,(ac-nrepl-unfiltered-clj clj)))
 
 (defun ac-nrepl-candidates-ns ()
   "Return namespace candidates."
   (ac-nrepl-candidates*
-   (ac-nrepl-filtered-clj "(complete.core/namespaces *ns*)")))
+   (ac-nrepl-filtered-clj
+    '(complete.core/namespaces *ns*))))
 
 (defun ac-nrepl-candidates-vars ()
   "Return var candidates."
   (ac-nrepl-candidates*
-   (ac-nrepl-filtered-clj "(let [prefix \"%s\"]
-    (if-not (.contains prefix \"/\")
-      (complete.core/ns-vars *ns*)
-      (let [ns-alias (symbol (first (.split prefix \"/\")))
+   (ac-nrepl-filtered-clj
+    '(if-not (.contains prefix "/")
+       (complete.core/ns-vars *ns*)
+       (let [ns-alias (symbol (first (.split prefix "/")))
             core     (find-ns 'clojure.core)]
-        (if-let [ns (or (get (ns-aliases *ns*) ns-alias)
-                        (find-ns ns-alias))]
-          (let [vars (complete.core/ns-vars ns)
-                vars (if (= core ns)
-                       vars
-                       (remove (into #{} (complete.core/ns-vars core)) vars))]
-            (map (fn [x] (str ns-alias \"/\" x)) vars))
-           '()))))")))
+         (if-let [ns (or (get (ns-aliases *ns*) ns-alias)
+                         (find-ns ns-alias))]
+           (let [vars (complete.core/ns-vars ns)
+                 vars (if (= core ns)
+                        vars
+                        (remove (into (hash-set) (complete.core/ns-vars core)) vars))]
+              (map (fn [x] (str ns-alias "/" x)) vars))
+           '()))))))
 
 (defun ac-nrepl-candidates-ns-classes ()
   "Return namespaced class candidates."
   (ac-nrepl-candidates*
-   (ac-nrepl-filtered-clj "(complete.core/ns-classes *ns*)")))
+   (ac-nrepl-filtered-clj '(complete.core/ns-classes *ns*))))
 
 (defun ac-nrepl-fetch-all-classes ()
   "Return all class candidates."
   (ac-nrepl-candidates*
-   (ac-nrepl-unfiltered-clj "(concat @complete.core/nested-classes
-                                     @complete.core/top-level-classes)")))
+   (ac-nrepl-unfiltered-clj '(concat @complete.core/nested-classes
+                                     @complete.core/top-level-classes))))
 
 (defvar ac-nrepl-all-classes-cache nil
   "Cached list of all classes loaded in the JVM backend.")
@@ -138,35 +159,35 @@
   "Return java method candidates."
   (ac-nrepl-candidates*
    (ac-nrepl-filtered-clj
-    "(for [class (vals (ns-imports *ns*))
+    '(for [class (vals (ns-imports *ns*))
            method (.getMethods class)
            :when (not (java.lang.reflect.Modifier/isStatic (.getModifiers method)))]
-       (str \".\" (.getName method) \" [\"(.getName class)\"]\"))")))
+       (str "." (.getName method) " [" (.getName class) "]")))))
 
 (defun ac-nrepl-candidates-static-methods ()
   "Return static method candidates."
   (ac-nrepl-candidates*
    (ac-nrepl-filtered-clj
-    "(let [prefix \"%s\"]
-       (if-not (.contains prefix \"/\")
-         '()
-          (let [scope (symbol (first (.split prefix \"/\")))]
-            (map (fn [memb] (str scope \"/\" memb))
-                 (when-let [class (try (complete.core/resolve-class scope)
-                                   (catch java.lang.ClassNotFoundException e nil))]
-                   (complete.core/static-members class))))))  ")))
+    '(if-not (.contains prefix "/")
+       '()
+        (let [scope (symbol (first (.split prefix "/")))]
+          (map (fn [memb] (str scope "/" memb))
+               (when-let [class (try (complete.core/resolve-class scope)
+                                 (catch java.lang.ClassNotFoundException e nil))]
+                 (complete.core/static-members class))))))))
 
 (defun ac-nrepl-documentation (symbol)
   "Return documentation for the given SYMBOL, if available."
-  (substring-no-properties
-   (replace-regexp-in-string
-    "\r" ""
-    (replace-regexp-in-string
-     "^\\(  \\|-------------------------\r?\n\\)" ""
-     (plist-get (nrepl-send-string-sync
-                 (format "(try (eval '(clojure.repl/doc %s)) (catch Exception e (println \"\")))" symbol)
-                 (nrepl-current-ns))
-                :stdout)))))
+  (let ((sym (intern symbol)))
+    (substring-no-properties
+     (replace-regexp-in-string
+      "\r" ""
+      (replace-regexp-in-string
+       "^\\(  \\|-------------------------\r?\n\\)" ""
+       (plist-get (ac-nrepl-send-sexp-sync
+                   `(try (eval '(clojure.repl/doc ,sym))
+                         (catch Exception e (println ""))))
+                  :stdout))))))
 
 (defun ac-nrepl-symbol-start-pos ()
   "Find the starting position of the symbol at point, unless inside a string."
