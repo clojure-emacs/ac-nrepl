@@ -123,7 +123,7 @@
 
 (defun ac-nrepl-cache-all-classes ()
   "Return a cached list of all class names loaded in the JVM backend."
-  (if (eq '() ac-nrepl-all-classes-cache)
+  (if (null ac-nrepl-all-classes-cache)
     (progn
       (message "Caching matching JVM classes...")
       (setq ac-nrepl-all-classes-cache (ac-nrepl-fetch-all-classes)) )
