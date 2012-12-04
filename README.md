@@ -8,9 +8,6 @@ interactive auto-completion framework
 Where nrepl provides it, pop-up documentation for completed symbols
 will be displayed.
 
-
-*This is an early work in progress, and liable to breakage as nrepl evolves.*
-
 Installation
 =============
 
