@@ -43,6 +43,10 @@ want to put `auto-complete` into your `completion-at-point-functions`:
     (add-hook 'nrepl-mode-hook 'set-auto-complete-as-completion-at-point-function)
     (add-hook 'nrepl-interaction-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
+You might consider using `ac-nrepl`'s popup documentation in place of `nrepl-doc`:
+
+    (define-key nrepl-interaction-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
+
 Usage
 =====
 
