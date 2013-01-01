@@ -63,12 +63,14 @@
 (defun ac-nrepl-available-p ()
   "Return t if nrepl is available for completion, otherwise nil."
   (condition-case nil
-      (not (null (nrepl-current-session)))
+      (not (null (nrepl-current-tooling-session)))
     (error nil)))
 
 (defun ac-nrepl-candidates* (clj)
   "Return completion candidates produced by evaluating CLJ."
-  (let ((response (plist-get (nrepl-send-string-sync (concat "(require 'complete.core) " clj) (nrepl-current-ns)) :value)))
+  (let ((response (plist-get (nrepl-send-string-sync (concat "(require 'complete.core) " clj)
+                                                     (nrepl-current-ns)
+                                                     (nrepl-current-tooling-session)) :value)))
     (when response
       (car (read-from-string response)))))
 
@@ -173,7 +175,8 @@
      "^\\(  \\|-------------------------\r?\n\\)" ""
      (plist-get (nrepl-send-string-sync
                  (format "(try (eval '(clojure.repl/doc %s)) (catch Exception e (println \"\")))" symbol)
-                 (nrepl-current-ns))
+                 (nrepl-current-ns)
+                 (nrepl-current-tooling-session))
                 :stdout)))))
 
 (defun ac-nrepl-symbol-start-pos ()
