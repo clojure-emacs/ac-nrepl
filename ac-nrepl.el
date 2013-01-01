@@ -66,11 +66,15 @@
       (not (null (nrepl-current-tooling-session)))
     (error nil)))
 
+(defun ac-nrepl-sync-eval (clj)
+  "Synchronously evaluate CLJ.
+Result is a plist, as returned from `nrepl-send-string-sync'."
+  (nrepl-send-string-sync clj (nrepl-current-ns) (nrepl-current-tooling-session)))
+
 (defun ac-nrepl-candidates* (clj)
   "Return completion candidates produced by evaluating CLJ."
-  (let ((response (plist-get (nrepl-send-string-sync (concat "(require 'complete.core) " clj)
-                                                     (nrepl-current-ns)
-                                                     (nrepl-current-tooling-session)) :value)))
+  (let ((response (plist-get (ac-nrepl-sync-eval (concat "(require 'complete.core) " clj))
+                             :value)))
     (when response
       (car (read-from-string response)))))
 
@@ -173,10 +177,9 @@
     "\r" ""
     (replace-regexp-in-string
      "^\\(  \\|-------------------------\r?\n\\)" ""
-     (plist-get (nrepl-send-string-sync
-                 (format "(try (eval '(clojure.repl/doc %s)) (catch Exception e (println \"\")))" symbol)
-                 (nrepl-current-ns)
-                 (nrepl-current-tooling-session))
+     (plist-get (ac-nrepl-sync-eval
+                 (format "(try (eval '(clojure.repl/doc %s))
+                               (catch Exception e (println \"\")))" symbol))
                 :stdout)))))
 
 (defun ac-nrepl-symbol-start-pos ()
