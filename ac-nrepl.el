@@ -170,7 +170,7 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
                                    (catch java.lang.ClassNotFoundException e nil))]
                    (complete.core/static-members class))))))  ")))
 
-(defun ac-nrepl--trim (s)
+(defun ac-nrepl-trim (s)
   "Trim leading and trailing whitespace from string S."
   (if (string-match "\\`[ \t\r\n]*\\(.*)[ \t\r\n]*\\'" s)
     (match-string 1)
