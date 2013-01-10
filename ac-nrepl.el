@@ -140,7 +140,7 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
   (message ""))
 
 ;;;###autoload
-(add-hook 'nrepl-connected-hook 'ac-nrepl-refresh-class-cache)
+(add-hook 'nrepl-connected-hook 'ac-nrepl-refresh-class-cache t)
 
 (defun ac-nrepl-candidates-all-classes ()
   "Return java method candidates."
