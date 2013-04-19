@@ -137,7 +137,7 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
   (ac-nrepl-clear-class-cache)
   (message "Caching JVM class names...")
   (ac-nrepl-cache-all-classes)
-  (message ""))
+  (message "Connected.  %s" (nrepl-random-words-of-inspiration)))
 
 ;;;###autoload
 (add-hook 'nrepl-connected-hook 'ac-nrepl-refresh-class-cache t)
