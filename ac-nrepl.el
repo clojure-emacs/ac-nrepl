@@ -127,8 +127,7 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
    (nrepl-make-response-handler
     (nrepl-current-connection-buffer)
     (lambda (buffer value)
-      (setq ac-nrepl-all-classes-cache (car (read-from-string value)))
-      (message "Cached JVM class names."))
+      (setq ac-nrepl-all-classes-cache (car (read-from-string value))))
     nil nil nil)
    (nrepl-current-ns)
    (nrepl-current-tooling-session)))
