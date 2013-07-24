@@ -8,7 +8,7 @@ interactive auto-completion framework
 Where nrepl provides it, pop-up documentation for completed symbols
 will be displayed.
 
-**Latest stable version**: see the [latest numbered tag](https://github.com/purcell/ac-nrepl/tags), which
+**Latest stable version**: see the [latest numbered tag](https://github.com/clojure-emacs/ac-nrepl/tags), which
 will also be the latest version available via Marmalade.
 
 Installation
@@ -71,12 +71,11 @@ documentation for the completed symbol should also be displayed.
 Acknowledgements
 ================
 
-Many thanks to the following contributors:
-
-* [Sam Aaron](https://github.com/samaaron)
-
+`ac-nrepl` was written by [Steve Purcell](https://github.com/purcell), with important contributions from [Sam Aaron](https://github.com/samaaron).
 
 <hr>
+
+Author links:
 
 [![](http://api.coderwall.com/purcell/endorsecount.png)](http://coderwall.com/purcell)
 
