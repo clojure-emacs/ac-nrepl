@@ -277,11 +277,13 @@ This affects only the current buffer."
 (defun ac-nrepl-popup-doc ()
   "A popup alternative to `nrepl-doc'."
   (interactive)
-  (popup-tip (ac-nrepl-documentation (symbol-at-point))
-             :point (ac-nrepl-symbol-start-pos)
-             :around t
-             :scroll-bar t
-             :margin t))
+  (let ((doc (ac-nrepl-documentation (symbol-at-point))))
+    (when doc
+     (popup-tip doc
+                :point (ac-nrepl-symbol-start-pos)
+                :around t
+                :scroll-bar t
+                :margin t))))
 
 (provide 'ac-nrepl)
 
