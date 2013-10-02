@@ -143,12 +143,17 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
 
 (defun ac-nrepl-candidates-java-methods ()
   "Return java method candidates."
-  (ac-nrepl-candidates*
-   (ac-nrepl-filtered-clj
-    "(for [class (vals (ns-imports *ns*))
-           method (.getMethods class)
-           :when (not (java.lang.reflect.Modifier/isStatic (.getModifiers method)))]
-       (str \".\" (.getName method) \" [\"(.getName class)\"]\"))")))
+  (mapcar (lambda (hit)
+            (let* ((parts (split-string hit "#"))
+                   (meth (nth 0 parts))
+                   (classname (nth 1 parts)))
+              (propertize meth 'summary classname)))
+          (ac-nrepl-candidates*
+           (ac-nrepl-filtered-clj
+            "(for [class (vals (ns-imports *ns*))
+                   method (.getMethods class)
+                   :when (not (java.lang.reflect.Modifier/isStatic (.getModifiers method)))]
+               (str \".\" (.getName method) \"#\" (.getName class)))"))))
 
 (defun ac-nrepl-candidates-static-methods ()
   "Return static method candidates."
@@ -241,18 +246,11 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
    ac-nrepl-source-defaults)
   "Auto-complete source for nrepl all class completion.")
 
-(defun ac-nrepl-delete-java-class-hint ()
-  "Remove the java class hint at point."
-  (let ((beg (point)))
-    (search-backward " [")
-    (delete-region beg (point))))
-
 ;;;###autoload
 (defvar ac-source-nrepl-java-methods
   (append
    '((candidates . ac-nrepl-candidates-java-methods)
-     (symbol . "m")
-     (action . ac-nrepl-delete-java-class-hint))
+     (symbol . "m"))
    ac-nrepl-source-defaults)
   "Auto-complete source for nrepl java method completion.")
 
