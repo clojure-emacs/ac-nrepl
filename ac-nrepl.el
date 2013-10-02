@@ -166,18 +166,21 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
 
 (defun ac-nrepl-documentation (symbol)
   "Return documentation for the given SYMBOL, if available."
-  (let ((doc
-         (substring-no-properties
-          (replace-regexp-in-string
-           "\r" ""
-           (replace-regexp-in-string
-            "^\\(  \\|-------------------------\r?\n\\)" ""
-            (plist-get (ac-nrepl-sync-eval
-                        (format "(try (eval '(clojure.repl/doc %s))
-                               (catch Exception e (println \"\")))" symbol))
-                       :stdout))))))
-    (unless (string-match "\\`[ \t\n]*\\'" doc)
-      doc)))
+  (let ((raw-doc (plist-get (ac-nrepl-sync-eval
+                             (format "(try (eval '(clojure.repl/doc %s))
+                                        (catch Exception e nil))"
+                                     symbol))
+                            :stdout)))
+    (when raw-doc
+      (let ((doc
+             (substring-no-properties
+              (replace-regexp-in-string
+               "\r" ""
+               (replace-regexp-in-string
+                "^\\(  \\|-------------------------\r?\n\\)" ""
+                raw-doc)))))
+        (unless (string-match "\\`[ \t\n]*\\'" doc)
+          doc)))))
 
 (defun ac-nrepl-symbol-start-pos ()
   "Find the starting position of the symbol at point, unless inside a string."
