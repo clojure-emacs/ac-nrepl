@@ -7,7 +7,7 @@
 ;; URL: https://github.com/purcell/ac-nrepl
 ;; Keywords: languages, clojure, nrepl
 ;; Version: DEV
-;; Package-Requires: ((nrepl "0.1") (auto-complete "1.4"))
+;; Package-Requires: ((cider "0.1") (auto-complete "1.4"))
 
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License
@@ -57,7 +57,7 @@
 
 ;;; Code:
 
-(require 'nrepl)
+(require 'nrepl-client)
 (require 'auto-complete)
 
 (defun ac-nrepl-available-p ()
