@@ -27,14 +27,14 @@ add the directory containing `ac-nrepl.el` to your `load-path`, and
 then `(require 'ac-nrepl)`.
 
 `ac-nrepl` provides an `nrepl`-specific completion source,
-so `auto-complete` needs to be told to use them when `nrepl-mode` is
+so `auto-complete` needs to be told to use them when `cider-repl-mode` is
 active. To do this, put the following code in your emacs init file to 
 
      (require 'ac-nrepl)
-     (add-hook 'nrepl-repl-mode-hook 'ac-nrepl-setup)
+     (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
      (add-hook 'cider-interaction-mode-hook 'ac-nrepl-setup)
      (eval-after-load "auto-complete"
-       '(add-to-list 'ac-modes 'nrepl-repl-mode))
+       '(add-to-list 'ac-modes 'cider-repl-mode))
 
 If you want to trigger `auto-complete` using <kbd>TAB</kbd> in nrepl buffers, you may
 want to put `auto-complete` into your `completion-at-point-functions`:
@@ -43,7 +43,7 @@ want to put `auto-complete` into your `completion-at-point-functions`:
       (setq completion-at-point-functions '(auto-complete)))
     (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
-    (add-hook 'nrepl-repl-mode-hook 'set-auto-complete-as-completion-at-point-function)
+    (add-hook 'cider-repl-mode-hook 'set-auto-complete-as-completion-at-point-function)
     (add-hook 'cider-interaction-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
 You might consider using `ac-nrepl`'s popup documentation in place of `nrepl-doc`:
@@ -54,7 +54,7 @@ Usage
 =====
 
 `ac-nrepl` should now automatically be enabled when you visit a buffer
-in which `nrepl-repl-mode` is active and `auto-complete` is enabled. (The
+in which `cider-repl-mode` is active and `auto-complete` is enabled. (The
 symbols "nrepl and "AC" should appear in the modeline.)
 
 Simply trigger auto-completion, and completion candidates supplied by
