@@ -14,10 +14,10 @@ will also be the latest version available via Marmalade.
 Installation
 =============
 
-First, ensure `auto-complete` and `nrepl` are installed: I recommend
+First, ensure `auto-complete` and `cider` are installed: I recommend
 using packages from [Marmalade][marmalade] or [Melpa][melpa].
 
-You'll need both `auto-complete` and `nrepl` to be enabled and
+You'll need both `auto-complete` and `cider` to be enabled and
 working, so please consult the corresponding documentation is you have
 any trouble with this.
 
@@ -31,10 +31,10 @@ so `auto-complete` needs to be told to use them when `nrepl-mode` is
 active. To do this, put the following code in your emacs init file to 
 
      (require 'ac-nrepl)
-     (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
-     (add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
+     (add-hook 'nrepl-repl-mode-hook 'ac-nrepl-setup)
+     (add-hook 'cider-interaction-mode-hook 'ac-nrepl-setup)
      (eval-after-load "auto-complete"
-       '(add-to-list 'ac-modes 'nrepl-mode))
+       '(add-to-list 'ac-modes 'nrepl-repl-mode))
 
 If you want to trigger `auto-complete` using <kbd>TAB</kbd> in nrepl buffers, you may
 want to put `auto-complete` into your `completion-at-point-functions`:
@@ -43,18 +43,18 @@ want to put `auto-complete` into your `completion-at-point-functions`:
       (setq completion-at-point-functions '(auto-complete)))
     (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
-    (add-hook 'nrepl-mode-hook 'set-auto-complete-as-completion-at-point-function)
-    (add-hook 'nrepl-interaction-mode-hook 'set-auto-complete-as-completion-at-point-function)
+    (add-hook 'nrepl-repl-mode-hook 'set-auto-complete-as-completion-at-point-function)
+    (add-hook 'cider-interaction-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
 You might consider using `ac-nrepl`'s popup documentation in place of `nrepl-doc`:
 
-    (define-key nrepl-interaction-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
+    (define-key cider-interaction-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
 
 Usage
 =====
 
 `ac-nrepl` should now automatically be enabled when you visit a buffer
-in which `nrepl-mode` is active and `auto-complete` is enabled. (The
+in which `nrepl-repl-mode` is active and `auto-complete` is enabled. (The
 symbols "nrepl and "AC" should appear in the modeline.)
 
 Simply trigger auto-completion, and completion candidates supplied by
