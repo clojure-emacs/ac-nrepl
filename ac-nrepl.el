@@ -120,7 +120,7 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
 (defun ac-nrepl-refresh-class-cache ()
   "Clear `ac-nrepl-all-classes-cache' and then refill it asynchronously."
   (setq ac-nrepl-all-classes-cache nil)
-  (nrepl-eval-async
+  (nrepl-send-string
    (concat "(require 'complete.core)"
            (ac-nrepl-unfiltered-clj "(concat @complete.core/nested-classes
                                        @complete.core/top-level-classes)"))
