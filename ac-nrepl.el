@@ -66,10 +66,24 @@
       (not (null (nrepl-current-tooling-session)))
     (error nil)))
 
+(defun ac-nrepl-namespacep (x)
+  (plist-get
+   (nrepl-send-string-sync
+    (format "(try (the-ns '%s) (catch Exception e nil))" x)
+    (nrepl-current-ns)
+    (nrepl-current-tooling-session))
+   :value))
+
+(defun ac-nrepl-current-ns ()
+  (let ((ns (nrepl-current-ns)))
+    (if (ac-nrepl-namespacep ns)
+        ns
+      "user")))
+
 (defun ac-nrepl-sync-eval (clj)
   "Synchronously evaluate CLJ.
 Result is a plist, as returned from `nrepl-send-string-sync'."
-  (nrepl-send-string-sync clj (nrepl-current-ns) (nrepl-current-tooling-session)))
+  (nrepl-send-string-sync clj (ac-nrepl-current-ns) (nrepl-current-tooling-session)))
 
 (defun ac-nrepl-candidates* (clj)
   "Return completion candidates produced by evaluating CLJ."
