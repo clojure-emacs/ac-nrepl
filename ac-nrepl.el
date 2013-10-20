@@ -58,6 +58,7 @@
 ;;; Code:
 
 (require 'nrepl-client)
+(require 'cider-interaction)
 (require 'auto-complete)
 
 (defun ac-nrepl-available-p ()
@@ -69,7 +70,7 @@
 (defun ac-nrepl-sync-eval (clj)
   "Synchronously evaluate CLJ.
 Result is a plist, as returned from `nrepl-send-string-sync'."
-  (nrepl-send-string-sync clj (nrepl-current-ns) (nrepl-current-tooling-session)))
+  (nrepl-send-string-sync clj (cider-current-ns) (nrepl-current-tooling-session)))
 
 (defun ac-nrepl-candidates* (clj)
   "Return completion candidates produced by evaluating CLJ."
@@ -129,7 +130,7 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
     (lambda (buffer value)
       (setq ac-nrepl-all-classes-cache (car (read-from-string value))))
     nil nil nil)
-   (nrepl-current-ns)
+   (cider-current-ns)
    (nrepl-current-tooling-session)))
 
 
