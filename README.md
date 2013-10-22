@@ -28,11 +28,11 @@ then `(require 'ac-nrepl)`.
 
 `ac-nrepl` provides an `nrepl`-specific completion source,
 so `auto-complete` needs to be told to use them when `cider-repl-mode` is
-active. To do this, put the following code in your emacs init file to 
+active. To do this, put the following code in your emacs init file to
 
      (require 'ac-nrepl)
      (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
-     (add-hook 'cider-interaction-mode-hook 'ac-nrepl-setup)
+     (add-hook 'cider-mode-hook 'ac-nrepl-setup)
      (eval-after-load "auto-complete"
        '(add-to-list 'ac-modes 'cider-repl-mode))
 
@@ -44,11 +44,11 @@ want to put `auto-complete` into your `completion-at-point-functions`:
     (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
     (add-hook 'cider-repl-mode-hook 'set-auto-complete-as-completion-at-point-function)
-    (add-hook 'cider-interaction-mode-hook 'set-auto-complete-as-completion-at-point-function)
+    (add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
 You might consider using `ac-nrepl`'s popup documentation in place of `nrepl-doc`:
 
-    (define-key cider-interaction-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
+    (define-key cider-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
 
 Usage
 =====
@@ -82,4 +82,3 @@ Author links:
 [![](http://www.linkedin.com/img/webpromo/btn_liprofile_blue_80x15.png)](http://uk.linkedin.com/in/stevepurcell)
 
 [Steve Purcell's blog](http://www.sanityinc.com/) // [@sanityinc on Twitter](https://twitter.com/sanityinc)
-
