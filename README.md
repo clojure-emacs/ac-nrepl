@@ -32,7 +32,7 @@ active. To do this, put the following code in your emacs init file to
 
      (require 'ac-nrepl)
      (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
-     (add-hook 'cider-interaction-mode-hook 'ac-nrepl-setup)
+     (add-hook 'cider-mode-hook 'ac-nrepl-setup)
      (eval-after-load "auto-complete"
        '(add-to-list 'ac-modes 'cider-repl-mode))
 
@@ -44,11 +44,11 @@ want to put `auto-complete` into your `completion-at-point-functions`:
     (add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
     (add-hook 'cider-repl-mode-hook 'set-auto-complete-as-completion-at-point-function)
-    (add-hook 'cider-interaction-mode-hook 'set-auto-complete-as-completion-at-point-function)
+    (add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
 You might consider using `ac-nrepl`'s popup documentation in place of `nrepl-doc`:
 
-    (define-key cider-interaction-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
+    (define-key cider-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
 
 Usage
 =====
