@@ -53,7 +53,8 @@ want to put `auto-complete` into your `completion-at-point-functions`:
 You might consider using `ac-nrepl`'s popup documentation in place of `nrepl-doc`:
 
 ```el
-(define-key cider-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
+(eval-after-load "cider"
+  '(define-key cider-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc))
 ```
 
 Usage
