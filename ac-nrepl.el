@@ -53,7 +53,8 @@
 ;;
 ;; You might consider using ac-nrepl's popup documentation in place of `nrepl-doc':
 ;;
-;;     (define-key cider-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
+;;     (eval-after-load 'cider
+;;       '(define-key cider-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc))
 
 ;;; Code:
 
