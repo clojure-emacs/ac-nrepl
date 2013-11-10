@@ -276,11 +276,37 @@ This affects only the current buffer."
   (add-to-list 'ac-sources 'ac-source-nrepl-java-methods)
   (add-to-list 'ac-sources 'ac-source-nrepl-static-methods))
 
+(defun ac-nrepl-quick-eval (x)
+  "Quickly eval X."
+  (unless (stringp x)
+    (setq x (format "%s" x)))
+  (plist-get
+   (nrepl-send-string-sync x)
+   :value))
+
+(defun ac-nrepl-symbolp (x)
+  "Return t if X is a symbol."
+  (string= "true" (ac-nrepl-quick-eval (format "(symbol? '%s)" x))))
+
+(defun ac-nrepl-fboundp (x)
+  "Return t if X is resolvable."
+  (and (ac-nrepl-symbolp x)
+       (not (string= "nil" (ac-nrepl-quick-eval (format "(resolve '%s)" x))))))
+
+(defun ac-nrepl-symbol-value (x)
+  "Get value of X if it's a symbol and can be resolved."
+  (if (ac-nrepl-fboundp x)
+      (ac-nrepl-quick-eval x)
+    "not resolved"))
+
 ;;;###autoload
 (defun ac-nrepl-popup-doc ()
   "A popup alternative to `nrepl-doc'."
   (interactive)
-  (let ((doc (ac-nrepl-documentation (symbol-at-point))))
+  (let* ((sym (symbol-at-point))
+         (doc (format "%s\n%s."
+                      (ac-nrepl-documentation sym)
+                      (ac-nrepl-symbol-value sym))))
     (when doc
      (popup-tip doc
                 :point (ac-nrepl-symbol-start-pos)
