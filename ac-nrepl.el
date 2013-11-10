@@ -135,7 +135,6 @@ Result is a plist, as returned from `nrepl-send-string-sync'."
    (nrepl-current-tooling-session)))
 
 
-;;;###autoload
 (add-hook 'nrepl-connected-hook 'ac-nrepl-refresh-class-cache t)
 
 (defun ac-nrepl-candidates-all-classes ()
