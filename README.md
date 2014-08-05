@@ -2,7 +2,7 @@ nrepl completion source for Emacs auto-complete package
 =======================================================
 
 __Deprecation notice: These days you probably want to use
- [ac-cider-compliment](https://github.com/alexander-yakushev/ac-cider-compliment)
+ [ac-cider](https://github.com/clojure-emacs/ac-cider)
  or Cider's built-in `company` completion support instead of this.__
 
 This plugin provides a completion source for the popular Emacs

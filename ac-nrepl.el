@@ -58,7 +58,7 @@
 
 ;;; Code:
 
-(message "Notice: You probably want to use ac-cider-compliment instead of ac-nrepl.")
+(message "Notice: You probably want to use ac-cider instead of ac-nrepl.")
 
 (require 'nrepl-client)
 (require 'cider-interaction)
