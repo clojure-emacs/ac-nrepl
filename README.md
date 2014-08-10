@@ -22,7 +22,7 @@ First, ensure `auto-complete` and `cider` are installed: I recommend
 using packages from [Marmalade][marmalade] or [Melpa][melpa].
 
 You'll need both `auto-complete` and `cider` to be enabled and
-working, so please consult the corresponding documentation is you have
+working, so please consult the corresponding documentation if you have
 any trouble with this.
 
 Next, install `ac-nrepl`. If you choose not to use the convenient
