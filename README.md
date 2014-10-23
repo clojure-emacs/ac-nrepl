@@ -77,7 +77,7 @@ documentation for the completed symbol should also be displayed.
 
 
 [marmalade]: http://marmalade-repo.org
-[melpa]: http://melpa.milkbox.net
+[melpa]: http://melpa.org
 
 Acknowledgements
 ================

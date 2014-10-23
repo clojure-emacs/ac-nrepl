@@ -30,7 +30,7 @@
 ;;; Installation:
 
 ;; Available as a package in both Melpa (recommended) at
-;; http://melpa.milkbox.net/ and Marmalade at http://marmalade-repo.org/
+;; http://melpa.org/ and Marmalade at http://marmalade-repo.org/
 ;; M-x package-install ac-nrepl
 
 ;;; Usage:
